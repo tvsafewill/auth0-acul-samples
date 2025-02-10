@@ -111,7 +111,7 @@ export const LoginIdScreen = () => {
   );
 };
 
-export default LoginIdScreen
+export default LoginIdScreen;
 ```
 
 ## Additional Information
