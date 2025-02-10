@@ -1,9 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   build: {
     target: "esnext",
     rollupOptions: {
@@ -14,12 +15,5 @@ export default defineConfig({
       },
     },
     cssCodeSplit: false, // Disable CSS code-splitting to bundle CSS in one file
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        quietDeps: true, // Disable "Dependency is not used" warning
-      },
-    },
-  },
+  }
 });
