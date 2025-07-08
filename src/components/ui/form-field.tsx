@@ -1,6 +1,4 @@
-import {
-  Field as FieldPrimitive,
-} from "@base-ui-components/react";
+import { Field as FieldPrimitive } from "@base-ui-components/react";
 import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { cn } from "@/lib/utils";
