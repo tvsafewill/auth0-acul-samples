@@ -2,6 +2,7 @@
   "name": "auth0-acul-sample",
   "private": true,
   "version": "0.0.0",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "node ./scripts/dev-screen.js",
