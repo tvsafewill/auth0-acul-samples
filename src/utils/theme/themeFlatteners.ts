@@ -73,10 +73,27 @@ export function flattenColors(colors: any): Record<string, string> {
 export function flattenBorders(borders: any): Record<string, string> {
   const result: Record<string, string> = {};
 
-  // Border radius values need px units
-  if (borders.button_border_radius)
+  // Border radius values need px units with automatic assignment based on buttons_style
+  let buttonBorderRadius = borders.button_border_radius;
+
+  // Always override border radius for pill/sharp styles, regardless of existing value
+  if (borders.buttons_style) {
+    switch (borders.buttons_style) {
+      case "pill":
+        buttonBorderRadius = 9999;
+        break;
+      case "sharp":
+        buttonBorderRadius = 0;
+        break;
+      case "rounded":
+        buttonBorderRadius = borders.button_border_radius || 10;
+        break;
+    }
+  }
+
+  if (buttonBorderRadius !== undefined)
     result["--ul-theme-border-button-border-radius"] =
-      `${borders.button_border_radius}px`;
+      `${buttonBorderRadius}px`;
   if (borders.input_border_radius)
     result["--ul-theme-border-input-border-radius"] =
       `${borders.input_border_radius}px`;
@@ -125,8 +142,17 @@ export function flattenFonts(fonts: any): Record<string, string> {
   const processFontType = (fontData: any, fontType: string): void => {
     if (fontData?.size) {
       const sizePercent = fontData.size as number;
-      const remValue = sizePercent / 100;
-      result[`--ul-theme-font-${fontType}-size`] = `${remValue}rem`;
+
+      // Universal percentage-based sizing: ALL font types calculate as percentage of reference_text_size
+      if (fonts.reference_text_size) {
+        const referenceSize = fonts.reference_text_size as number;
+        const calculatedSize = (referenceSize * sizePercent) / 100;
+        result[`--ul-theme-font-${fontType}-size`] = `${calculatedSize}px`;
+      } else {
+        // Fallback: convert percentage to rem if no reference size available
+        const remValue = sizePercent / 100;
+        result[`--ul-theme-font-${fontType}-size`] = `${remValue}rem`;
+      }
     }
 
     if (fontData?.bold !== undefined) {
