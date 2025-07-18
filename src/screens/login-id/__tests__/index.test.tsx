@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import LoginIdScreen from "../index";
 import LoginIdInstance from "@auth0/auth0-acul-js/login-id";
 import {
@@ -348,6 +348,48 @@ describe("LoginIdScreen", () => {
       });
       render(<LoginIdScreen />);
       expect(document.title).toBe("Custom Login Title");
+    });
+  });
+
+  describe("Country Code Picker Conditional Display", () => {
+    it("should NOT show country picker when phone is mixed with other identifiers", () => {
+      mockInstance.transaction.allowedIdentifiers = ["email", "phone"];
+      render(<LoginIdScreen />);
+
+      // Should not show country picker when phone is mixed with email
+      expect(screen.queryByText("Select Country")).not.toBeInTheDocument();
+    });
+
+    it("should NOT show country picker when username and phone are both allowed", () => {
+      mockInstance.transaction.allowedIdentifiers = ["username", "phone"];
+      render(<LoginIdScreen />);
+
+      // Should not show country picker when phone is mixed with username
+      expect(screen.queryByText("Select Country")).not.toBeInTheDocument();
+    });
+
+    it("should SHOW country picker ONLY when phone is the sole identifier", () => {
+      mockInstance.transaction.allowedIdentifiers = ["phone"];
+      mockInstance.transaction.countryCode = null;
+      mockInstance.transaction.countryPrefix = null;
+      render(<LoginIdScreen />);
+
+      expect(screen.getByText("Select Country")).toBeInTheDocument();
+    });
+
+    it("should call pickCountryCode when clicked in phone-only mode", async () => {
+      mockInstance.transaction.allowedIdentifiers = ["phone"];
+      mockInstance.transaction.countryCode = null;
+      mockInstance.transaction.countryPrefix = null;
+      render(<LoginIdScreen />);
+
+      const countryPicker = screen
+        .getByText("Select Country")
+        .closest("button");
+      await act(async () => {
+        fireEvent.click(countryPicker!);
+      });
+      expect(mockInstance.pickCountryCode).toHaveBeenCalled();
     });
   });
 });
