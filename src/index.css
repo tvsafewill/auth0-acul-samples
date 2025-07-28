@@ -108,7 +108,6 @@ Created to support alignment related utlities like justify, text-align etc with 
   --radius-input: var(--ul-theme-border-input-border-radius);
   --radius-widget: var(--ul-theme-border-widget-corner-radius);
   --shadow-widget: var(--ul-theme-border-show-widget-shadow);
-  --border-button: var(--ul-theme-border-button-border-weight);
   --border-input: var(--ul-theme-border-input-border-weight);
   --border-widget: var(--ul-theme-border-widget-border-weight);
 

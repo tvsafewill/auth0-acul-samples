@@ -3,6 +3,10 @@ import { getIcon } from "./iconUtils";
 export interface SocialConnection {
   name: string;
   strategy?: string;
+  options: {
+    iconUrl?: string;
+    displayName?: string;
+  };
 }
 
 interface SocialProviderDetails {
@@ -10,31 +14,14 @@ interface SocialProviderDetails {
   iconComponent: React.ReactNode | null;
 }
 
-const nameToDisplayNameMap: Record<string, string> = {
-  "google-oauth2": "Google",
-  linkedin: "LinkedIn",
-  "klarna-social-connection": "Klarna",
-  facebook: "Facebook",
-  apple: "Apple",
-  github: "GitHub",
-  twitter: "Twitter",
-  microsoft: "Microsoft",
-  windowslive: "Microsoft",
-  azureadv2: "Microsoft",
-  amazon: "Amazon",
-  paypal: "PayPal",
-  "hugging-face": "Hugging Face",
-  digitalocean: "DigitalOcean",
-};
-
 /**
  * Generates a display name for a social connection.
  * Prefers a direct map from connection.name, then falls back to capitalizing it.
  * If name is unavailable, it attempts to use the strategy.
  */
 const generateDisplayName = (connection: SocialConnection): string => {
-  if (connection.name && nameToDisplayNameMap[connection.name]) {
-    return nameToDisplayNameMap[connection.name];
+  if (connection?.options?.displayName) {
+    return connection?.options?.displayName;
   }
   // Fallback to capitalizing the connection.name if not in map
   if (connection.name) {
@@ -59,11 +46,7 @@ export const getSocialProviderDetails = (
   connection: SocialConnection
 ): SocialProviderDetails => {
   const displayName = generateDisplayName(connection);
-
-  const iconComponent =
-    getIcon(connection.name) ||
-    getIcon(connection.strategy || "default") ||
-    null;
+  const iconComponent = getIcon();
 
   return {
     displayName,
