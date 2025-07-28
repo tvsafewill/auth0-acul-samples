@@ -41,12 +41,7 @@ export default tseslint.config(
 
     rules: {
       // Run Prettier as an ESLint rule and report formatting issues as errors
-      "prettier/prettier": [
-        "error",
-        {
-          endOfLine: "auto", // Prevents false positives for line endings
-        },
-      ],
+      "prettier/prettier": "error",
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": [
         "warn",
@@ -72,6 +67,18 @@ export default tseslint.config(
         },
       ],
       "simple-import-sort/exports": "error", // Enforce sorting for exports as well
+    },
+  },
+
+  // Test file overrides - allow more relaxed rules for test files
+  {
+    files: [
+      "**/__tests__/**/*.{ts,tsx}",
+      "**/*.test.{ts,tsx}",
+      "**/*.spec.{ts,tsx}",
+    ],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off", // Allow 'any' type in tests for simplicity
     },
   },
 

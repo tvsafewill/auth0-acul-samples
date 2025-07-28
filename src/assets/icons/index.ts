@@ -1,6 +1,7 @@
 export * from "./AppleIcon";
 export * from "./DefaultConnectionIcon";
 export * from "./DuolingoIcon";
+export * from "./ErrorCircleIcon";
 export * from "./ExclamationCircleIcon";
 export * from "./EyeIcon";
 export * from "./EyeSlashIcon";
