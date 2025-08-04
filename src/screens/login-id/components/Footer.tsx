@@ -1,6 +1,6 @@
 import ULThemeLink from "@/components/ULThemeLink";
-
 import { rebaseLinkToCurrentOrigin } from "@/utils/helpers/urlUtils";
+
 import { useLoginIdManager } from "../hooks/useLoginIdManager";
 
 function Footer() {
