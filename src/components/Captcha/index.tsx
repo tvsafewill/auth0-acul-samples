@@ -1,0 +1,151 @@
+import React from "react";
+import { Control, FieldValues, Path, RegisterOptions } from "react-hook-form";
+
+import AuthChallengeWidget from "./providers/AuthChallengeWidget";
+// import FriendlyCaptchaWidget from "./providers/FriendlyCaptchaWidget";
+import HCaptchaWidget from "./providers/HCaptchaWidget";
+import RecaptchaCombinedWidget from "./providers/ReCaptchaCombinedWidget";
+import SimpleCaptchaWidget from "./providers/SimpleCaptchaWidget";
+// import ArkoseWidget from "./providers/ArkoseWidget";
+
+// ---
+// Interfaces
+// ---
+
+export interface CaptchaResponse {
+  provider: string;
+  token?: string;
+  answer?: string;
+  arkoseToken?: string;
+}
+
+export interface CaptchaWidgetProps<T extends FieldValues = FieldValues> {
+  config: {
+    provider: string;
+    siteKey?: string;
+    image?: string;
+    size?: string;
+    placeholder?: string;
+  };
+  control: Control<T>;
+  rules?: RegisterOptions<T>;
+  name: Path<T>;
+  onCaptchaResponse: (response: CaptchaResponse | null) => void;
+  className?: string;
+  label?: string;
+  theme?: "light" | "dark" | "auto";
+  error?: string;
+}
+
+export interface ICaptcha {
+  provider?: string;
+  image?: string;
+  imageAltText?: string;
+  enabled?: boolean;
+  siteKey?: string;
+  // clientSubdomain?: string;
+}
+
+export interface CaptchaProps<T extends FieldValues = FieldValues> {
+  captcha?: ICaptcha;
+  onValidationChange?: (
+    isValid: boolean,
+    value?: string,
+    error?: string
+  ) => void;
+  label?: string;
+  sdkError?: string;
+  theme?: "light" | "dark" | "auto";
+  className?: string;
+  control: Control<T>;
+  rules?: RegisterOptions<T>;
+  name: Path<T>;
+}
+
+// ---
+// Constants and Mappings
+// ---
+
+// A map to associate provider strings with their respective React components
+const CAPTCHA_WIDGET_MAP: {
+  [key: string]: React.ComponentType<CaptchaWidgetProps>;
+} = {
+  //   friendly_captcha: FriendlyCaptchaWidget,
+  recaptcha_v2: RecaptchaCombinedWidget,
+  hcaptcha: HCaptchaWidget,
+  recaptcha_enterprise: RecaptchaCombinedWidget,
+  //   arkose: ArkoseWidget,
+  auth0_v2: AuthChallengeWidget,
+};
+
+// ---
+// Main Component
+// ---
+
+const Captcha = <T extends FieldValues = FieldValues>({
+  control,
+  rules,
+  name,
+  captcha,
+  onValidationChange,
+  label,
+  sdkError,
+  theme,
+  className,
+}: CaptchaProps<T>) => {
+  const { provider, image, siteKey, enabled = true } = captcha || {}; // Default 'enabled' to true
+  console.log(theme, siteKey, CAPTCHA_WIDGET_MAP);
+
+  // If captcha is not enabled or no provider is specified, render nothing.
+  if (!enabled || !provider) {
+    return null;
+  }
+
+  const handleResponse = (res: CaptchaResponse | null) => {
+    if (onValidationChange) {
+      if (res) {
+        const value =
+          res.provider === "auth0" ? res.answer : res.token || res.arkoseToken;
+        const isValid = !!value;
+        onValidationChange(isValid, value);
+      } else {
+        onValidationChange(false);
+      }
+    }
+  };
+
+  // Handle the special case for SimpleCaptchaWidget (Auth0 v1)
+  if (provider === "auth0") {
+    return image ? (
+      <SimpleCaptchaWidget
+        config={{ provider: "auth0", image }}
+        onCaptchaResponse={handleResponse}
+        control={control}
+        name={name}
+        rules={rules}
+        label={label}
+        error={sdkError}
+        className={className}
+      />
+    ) : null;
+  }
+
+  // Use the map for other providers
+  // const SpecificCaptchaWidget = CAPTCHA_WIDGET_MAP[provider];
+
+  // if (SpecificCaptchaWidget && siteKey) {
+  //   return (
+  //     <SpecificCaptchaWidget
+  //       config={{ provider, siteKey }}
+  //       onCaptchaResponse={handleResponse}
+  //       theme={theme}
+  //       label={label}
+  //       error={sdkError}
+  //       className={className}
+  //     />
+  //   );
+  // }
+  return null;
+};
+
+export default Captcha;
