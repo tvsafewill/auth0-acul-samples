@@ -63,22 +63,6 @@ export interface CaptchaProps<T extends FieldValues = FieldValues> {
 }
 
 // ---
-// Constants and Mappings
-// ---
-
-// A map to associate provider strings with their respective React components
-const CAPTCHA_WIDGET_MAP: {
-  [key: string]: React.ComponentType<CaptchaWidgetProps>;
-} = {
-  //   friendly_captcha: FriendlyCaptchaWidget,
-  recaptcha_v2: RecaptchaCombinedWidget,
-  hcaptcha: HCaptchaWidget,
-  recaptcha_enterprise: RecaptchaCombinedWidget,
-  //   arkose: ArkoseWidget,
-  auth0_v2: AuthChallengeWidget,
-};
-
-// ---
 // Main Component
 // ---
 
@@ -93,8 +77,23 @@ const Captcha = <T extends FieldValues = FieldValues>({
   theme,
   className,
 }: CaptchaProps<T>) => {
+  // ---
+  // Constants and Mappings
+  // ---
+
+  function getCaptchaWidgetMap<T extends FieldValues>() {
+    return {
+      recaptcha_v2: RecaptchaCombinedWidget as React.ComponentType<
+        CaptchaWidgetProps<T>
+      >,
+      hcaptcha: HCaptchaWidget as React.ComponentType<CaptchaWidgetProps<T>>,
+      auth0_v2: AuthChallengeWidget as React.ComponentType<
+        CaptchaWidgetProps<T>
+      >,
+    };
+  }
+  const CAPTCHA_WIDGET_MAP = getCaptchaWidgetMap<T>();
   const { provider, image, siteKey, enabled = true } = captcha || {}; // Default 'enabled' to true
-  console.log(theme, siteKey, CAPTCHA_WIDGET_MAP);
 
   // If captcha is not enabled or no provider is specified, render nothing.
   if (!enabled || !provider) {
@@ -131,20 +130,24 @@ const Captcha = <T extends FieldValues = FieldValues>({
   }
 
   // Use the map for other providers
-  // const SpecificCaptchaWidget = CAPTCHA_WIDGET_MAP[provider];
+  const SpecificCaptchaWidget =
+    CAPTCHA_WIDGET_MAP[provider as keyof typeof CAPTCHA_WIDGET_MAP];
 
-  // if (SpecificCaptchaWidget && siteKey) {
-  //   return (
-  //     <SpecificCaptchaWidget
-  //       config={{ provider, siteKey }}
-  //       onCaptchaResponse={handleResponse}
-  //       theme={theme}
-  //       label={label}
-  //       error={sdkError}
-  //       className={className}
-  //     />
-  //   );
-  // }
+  if (SpecificCaptchaWidget && siteKey) {
+    return (
+      <SpecificCaptchaWidget
+        config={{ provider, siteKey }}
+        control={control}
+        name={name}
+        rules={rules}
+        onCaptchaResponse={handleResponse}
+        theme={theme}
+        label={label}
+        error={sdkError}
+        className={className}
+      />
+    );
+  }
   return null;
 };
 
