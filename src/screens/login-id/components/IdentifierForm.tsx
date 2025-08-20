@@ -68,9 +68,6 @@ function IdentifierForm() {
   // Handle text fallbacks in component
   const buttonText = texts?.buttonText || "Continue";
   const captchaLabel = texts?.captchaCodePlaceholder?.concat("*") || "CAPTCHA*";
-  // This error text is for when the user *fails* the CAPTCHA validation (e.g., empty field)
-  const captchaValidationErrorText =
-    "Please complete the CAPTCHA verification.";
   const forgotPasswordText = texts?.forgotPasswordText || "Forgot Password?";
 
   // Get general errors (not field-specific)
@@ -86,13 +83,11 @@ function IdentifierForm() {
 
   const captchaSDKError = getFieldError("captcha", errors);
 
-  const { captchaConfig, captchaProps, captchaValue, validateCaptcha } =
-    useCaptcha(
-      captcha || undefined,
-      captchaLabel,
-      captchaValidationErrorText,
-      getCaptchaTheme()
-    );
+  const { captchaConfig, captchaProps, captchaValue } = useCaptcha(
+    captcha || undefined,
+    captchaLabel,
+    getCaptchaTheme()
+  );
 
   // Get allowed identifiers directly from SDK
   const allowedIdentifiers =
@@ -106,10 +101,6 @@ function IdentifierForm() {
 
   // Proper submit handler with form data
   const onSubmit = async (data: LoginIdFormData) => {
-    if (!validateCaptcha()) {
-      return; // Prevent submission if CAPTCHA validation fails
-    }
-
     await handleLoginId(data.identifier, captchaValue);
   };
 

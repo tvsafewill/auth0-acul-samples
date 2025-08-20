@@ -5,7 +5,6 @@ import type { ICaptcha } from "@/components/Captcha/index";
 export const useCaptcha = (
   captchaConfig?: ICaptcha,
   label?: string,
-  validationErrorText?: string,
   theme?: "light" | "dark" | "auto"
 ) => {
   const isCaptchaEnabled = !!captchaConfig && !!captchaConfig.provider;
@@ -25,21 +24,6 @@ export const useCaptcha = (
     []
   );
 
-  const validateCaptcha = useCallback(() => {
-    if (!isCaptchaEnabled) {
-      setInternalError(undefined);
-      return true;
-    }
-
-    if (!isValid) {
-      setInternalError(validationErrorText);
-      return false;
-    }
-
-    setInternalError(undefined);
-    return true;
-  }, [isCaptchaEnabled, isValid, validationErrorText]);
-
   return {
     captchaConfig: isCaptchaEnabled ? captchaConfig : undefined,
     captchaProps: {
@@ -49,7 +33,6 @@ export const useCaptcha = (
       theme: theme,
     },
     captchaValue: value,
-    validateCaptcha,
     isCaptchaSolved: isValid,
   };
 };

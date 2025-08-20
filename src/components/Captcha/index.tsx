@@ -27,7 +27,7 @@ export interface CaptchaWidgetProps<T extends FieldValues = FieldValues> {
     size?: string;
     placeholder?: string;
   };
-  control: Control<T>;
+  control?: Control<T>;
   rules?: RegisterOptions<T>;
   name: Path<T>;
   onCaptchaResponse: (response: CaptchaResponse | null) => void;
@@ -43,7 +43,6 @@ export interface ICaptcha {
   imageAltText?: string;
   enabled?: boolean;
   siteKey?: string;
-  // clientSubdomain?: string;
 }
 
 export interface CaptchaProps<T extends FieldValues = FieldValues> {
@@ -137,9 +136,7 @@ const Captcha = <T extends FieldValues = FieldValues>({
     return (
       <SpecificCaptchaWidget
         config={{ provider, siteKey }}
-        control={control}
         name={name}
-        rules={rules}
         onCaptchaResponse={handleResponse}
         theme={theme}
         label={label}
