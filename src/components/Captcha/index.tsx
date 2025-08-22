@@ -2,6 +2,7 @@ import React from "react";
 import { Control, FieldValues, Path, RegisterOptions } from "react-hook-form";
 
 import AuthChallengeWidget from "./providers/AuthChallengeWidget";
+import FriendlyCaptchaWidget from "./providers/FriendlyCaptchaWidget";
 import HCaptchaWidget from "./providers/HCaptchaWidget";
 import RecaptchaCombinedWidget from "./providers/ReCaptchaCombinedWidget";
 import SimpleCaptchaWidget from "./providers/SimpleCaptchaWidget";
@@ -88,6 +89,9 @@ const Captcha = <T extends FieldValues = FieldValues>({
       >,
       hcaptcha: HCaptchaWidget as React.ComponentType<CaptchaWidgetProps<T>>,
       auth0_v2: AuthChallengeWidget as React.ComponentType<
+        CaptchaWidgetProps<T>
+      >,
+      friendly_captcha: FriendlyCaptchaWidget as React.ComponentType<
         CaptchaWidgetProps<T>
       >,
     };
