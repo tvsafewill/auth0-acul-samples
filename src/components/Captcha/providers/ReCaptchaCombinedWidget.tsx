@@ -3,7 +3,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import ReCAPTCHAEnterprise from "react-google-recaptcha-enterprise";
 
 import { cn } from "@/lib/utils";
-import { getRecaptchaTheme } from "@/utils/theme/themeEngine";
+import { getCaptchaTheme } from "@/utils/theme/themeEngine";
 
 import type { CaptchaResponse, CaptchaWidgetProps } from "../index";
 
@@ -95,7 +95,7 @@ const RecaptchaCombinedWidget: React.FC<CaptchaWidgetProps> = ({
             onChange={handleChange}
             onExpired={handleExpired}
             onError={handleError}
-            theme={getRecaptchaTheme(theme)}
+            theme={getCaptchaTheme(theme)}
             size="normal"
           />
         </div>

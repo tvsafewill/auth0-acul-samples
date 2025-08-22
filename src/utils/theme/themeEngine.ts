@@ -221,7 +221,7 @@ export function clearThemeCache(): void {
   currentThemeCache = {};
 }
 
-export const getRecaptchaTheme = (
+export const getCaptchaTheme = (
   theme: "light" | "dark" | "auto" | undefined
 ) => {
   if (theme === "auto") {

@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 import { cn } from "@/lib/utils";
+import { getCaptchaTheme } from "@/utils/theme/themeEngine";
 
 import type { CaptchaResponse, CaptchaWidgetProps } from "../index";
 
@@ -64,17 +65,6 @@ const HCaptchaWidget: React.FC<CaptchaWidgetProps> = ({
     return null;
   }
 
-  const getHCaptchaTheme = (): "light" | "dark" => {
-    if (
-      isClient &&
-      theme === "auto" &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    ) {
-      return "dark";
-    }
-    return theme === "dark" ? "dark" : "light";
-  };
-
   // Only render HCaptcha on the client side
   if (!isClient) {
     return null;
@@ -101,7 +91,7 @@ const HCaptchaWidget: React.FC<CaptchaWidgetProps> = ({
             onVerify={handleVerify}
             onExpire={handleExpired}
             onError={handleError}
-            theme={getHCaptchaTheme()}
+            theme={getCaptchaTheme(theme)}
             size="normal"
           />
         </div>
