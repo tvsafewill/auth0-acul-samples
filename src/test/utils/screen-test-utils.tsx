@@ -16,7 +16,7 @@ export class ScreenTestUtils {
     // If not found, try any input element by label
     if (!input) {
       const elements = screen.queryAllByLabelText(labelPattern);
-      input = elements.find((el) => el.tagName === "INPUT") || null;
+      input = elements.find((el: Element) => el.tagName === "INPUT") || null;
     }
 
     if (!input) {

@@ -79,7 +79,7 @@ describe("ULThemeCountryCodePicker Component", () => {
       />
     );
 
-    const countrySpan = screen.getByText((_, element) => {
+    const countrySpan = screen.getByText((_: string, element: Element | null) => {
       return (
         element?.tagName === "SPAN" &&
         element?.textContent === "Algeria, DZ, 213" &&
